@@ -8,6 +8,11 @@ WORKDIR $HOME
 
 ######### Customize Container Here ###########
 
+RUN apt-get update \
+    && apt-get install -y sudo \
+    && echo 'kasm-user ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers \
+    && rm -rf /var/lib/apt/list/*
+
 #Google Chrome
 COPY ./src/chrome $INST_SCRIPTS/chrome/
 RUN bash $INST_SCRIPTS/chrome/chrome_instalacija.sh  && rm -rf $INST_SCRIPTS/chrome/
@@ -60,6 +65,10 @@ RUN bash $INST_SCRIPTS/sublime/sublime_instalacija.sh  && rm -rf $INST_SCRIPTS/s
 COPY ./src/vscode $INST_SCRIPTS/vscode/
 RUN bash $INST_SCRIPTS/vscode/vscode_instalacija.sh  && rm -rf $INST_SCRIPTS/vscode/
 
+#Visual Code Server
+COPY ./src/vscode_server $INST_SCRIPTS/vscode_server/
+RUN bash $INST_SCRIPTS/vscode_server/vscserver_instalacija.sh && rm -rf $INST_SCRIPTS/vscode_server/
+
 #yarn
 COPY ./src/yarn $INST_SCRIPTS/yarn/
 RUN bash $INST_SCRIPTS/yarn/yarn_instalacija.sh && rm -rf $INST_SCRIPTS/yarn/
@@ -92,6 +101,7 @@ RUN echo fs.inotify.max_user_watches=524288 | tee -a /etc/sysctl.conf && sysctl 
 
 RUN ln -s /usr/local/rvm ~/.rvm
 RUN echo "source $HOME/.rvm/scripts/rvm" >> ~/.bashrc
+
 
 ######### End Customizations ###########
 

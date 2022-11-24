@@ -1,0 +1,11 @@
+Posto su servisi instalirani u docker kontejneru potrebno je pokrenuti ih manualno jer nema mogucnosti koristiti systemd servise.
+
+Pokretanje postgres servera
+
+1) sudo -i -u postgres
+2) pg_ctlcluster 12 main start
+
+
+Pokretanje redis servera
+
+1) redis-server
