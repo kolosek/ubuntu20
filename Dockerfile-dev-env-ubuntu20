@@ -101,7 +101,7 @@ RUN echo fs.inotify.max_user_watches=524288 | tee -a /etc/sysctl.conf && sysctl 
 
 RUN ln -s /usr/local/rvm ~/.rvm
 RUN echo "source $HOME/.rvm/scripts/rvm" >> ~/.bashrc
-
+RUN echo "source $HOME/.nvm/nvm.sh" >> ~/.bashrc
 
 ######### End Customizations ###########
 
