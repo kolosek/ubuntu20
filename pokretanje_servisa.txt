@@ -9,3 +9,10 @@ Pokretanje postgres servera
 Pokretanje redis servera
 
 1) redis-server
+
+
+Pokretanje vs code servera. Pokrene code-server na odredjenom portu (8080 u ovom slucaju) unutar kontejnera, nakon cega se moze pristupiti ovom serveru sa drugih
+racunara , ili host-a, tako sto se pristupi host IP adresi, ili localhost sa hosta, sa portom koji je bindovan. (u docker compose port 8080 ovog kontejnera je
+bindovan portu 6911 na hostu tako da bi se pristupilo iz browsera sa: (host ip ili localhost):6911)
+
+1) code-server --bind-addr 0.0.0.0:8080
