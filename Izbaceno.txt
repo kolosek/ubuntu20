@@ -1,0 +1,11 @@
+Elasticsearch:
+
+#Elasticsearch instalacija
+COPY ./src/elasticsearch $INST_SCRIPTS/elasticsearch/
+RUN bash $INST_SCRIPTS/elasticsearch/elasticsearch_instalacija.sh && rm -rf $INST_SCRIPTS/elasticsearch/
+
+#Promjena vlasnika i pokretanje ES pri pokretanje kontejnera
+sudo chown -R kasm-user:kasm-user /usr/share/elasticsearch-8.5.2 && /usr/share/elasticsearch-8.5.2/bin/elasticsearch &
+
+#podesavanje lokacije ES
+ENV ES_HOME /usr/share/elasticsearch-8.5.2

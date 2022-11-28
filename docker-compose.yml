@@ -1,0 +1,13 @@
+version: '3'
+services:
+    dev-env:
+        image: strahinjakkolosek/ubuntu20-dev-env:1.0
+        privileged: true
+        ports:
+            - "6901:6901"
+            - "6911:8080"
+        environment:
+            - VNC_PW=password
+        shm_size: '2gb'
+        volumes:
+            - .:/home/kasm-user

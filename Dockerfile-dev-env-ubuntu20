@@ -8,13 +8,15 @@ WORKDIR $HOME
 
 ######### Customize Container Here ###########
 
+#Omogucen sudo
+RUN apt-get update \
+    && apt-get install -y sudo \
+    && echo 'kasm-user ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers \
+    && rm -rf /var/lib/apt/list/*
+
 #Google Chrome
 COPY ./src/chrome $INST_SCRIPTS/chrome/
 RUN bash $INST_SCRIPTS/chrome/chrome_instalacija.sh  && rm -rf $INST_SCRIPTS/chrome/
-
-#Elasticsearch
-COPY ./src/elasticsearch $INST_SCRIPTS/elasticsearch/
-RUN bash $INST_SCRIPTS/elasticsearch/elasticsearch_instalacija.sh && rm -rf $INST_SCRIPTS/elasticsearch/
 
 #Imagemagick
 COPY ./src/imagemagick $INST_SCRIPTS/imagemagick/
@@ -60,10 +62,15 @@ RUN bash $INST_SCRIPTS/sublime/sublime_instalacija.sh  && rm -rf $INST_SCRIPTS/s
 COPY ./src/vscode $INST_SCRIPTS/vscode/
 RUN bash $INST_SCRIPTS/vscode/vscode_instalacija.sh  && rm -rf $INST_SCRIPTS/vscode/
 
+#Visual Code Server
+COPY ./src/vscode_server $INST_SCRIPTS/vscode_server/
+RUN bash $INST_SCRIPTS/vscode_server/vscserver_instalacija.sh && rm -rf $INST_SCRIPTS/vscode_server/
+
 #yarn
 COPY ./src/yarn $INST_SCRIPTS/yarn/
 RUN bash $INST_SCRIPTS/yarn/yarn_instalacija.sh && rm -rf $INST_SCRIPTS/yarn/
 
+#Ispravljanje gresaka vezane za bashrc koji fali
 RUN echo "if [ ! -z \"\${SHELL_EXEC}\" ] && [ \"\${TERM}\" == \"xterm-256color\" ] ; \n\
 then \n\
     set +e \n\
@@ -90,8 +97,17 @@ RUN echo 'export PS1="\u@\h \[\033[32m\]\w\[\033[33m\]\$(parse_git_branch)\[\033
 
 RUN echo fs.inotify.max_user_watches=524288 | tee -a /etc/sysctl.conf && sysctl -p
 
+#Dodavanje linka u home folderu sa instalacijom rvm-a
 RUN ln -s /usr/local/rvm ~/.rvm
+
+#Odredjivanje izvora za rvm i nvm
 RUN echo "source $HOME/.rvm/scripts/rvm" >> ~/.bashrc
+RUN echo "source $HOME/.nvm/nvm.sh" >> ~/.bashrc
+
+#Automatsko pokretanje servisa
+RUN echo "/usr/bin/desktop_ready && code-server --bind-addr 0.0.0.0:8080 & redis-server & sudo /usr/bin/mysqld_safe & sudo pg_ctlcluster 12 main start & echo "username=kasm-user" > ~/.vnc/config && echo "disablebasicauth" >> ~/.vnc/config" > $STARTUPDIR/custom_startup.sh \
+&& chmod +x $STARTUPDIR/custom_startup.sh
+
 
 ######### End Customizations ###########
 
@@ -103,3 +119,4 @@ WORKDIR $HOME
 RUN mkdir -p $HOME && chown -R 1000:0 $HOME
 
 USER 1000
+
