@@ -103,13 +103,20 @@ RUN ln -s /usr/local/rvm ~/.rvm
 RUN echo "source $HOME/.rvm/scripts/rvm" >> ~/.bashrc
 RUN echo "source $HOME/.nvm/nvm.sh" >> ~/.bashrc
 
+#Automatsko pokretanje servisa
+RUN echo "/usr/bin/desktop_ready && code-server --bind-addr 0.0.0.0:8080 & redis-server & sudo /usr/bin/mysqld_safe & sudo pg_ctlcluster 12 main start & sudo chown -R kasm-user:kasm-user /usr/share/elasticsearch-8.5.2 && /usr/share/elasticsearch-8.5.2/bin/elasticsearch & echo "username=kasm-user" > ~/.vnc/config && echo "disablebasicauth" >> ~/.vnc/config" > $STARTUPDIR/custom_startup.sh \
+&& chmod +x $STARTUPDIR/custom_startup.sh
+
+
 ######### End Customizations ###########
 
 RUN chown 1000:0 $HOME
 RUN $STARTUPDIR/set_user_permission.sh $HOME
 
 ENV HOME /home/kasm-user
+ENV ES_HOME /opt/elasticsearch-8.5.2
 WORKDIR $HOME
 RUN mkdir -p $HOME && chown -R 1000:0 $HOME
 
 USER 1000
+
